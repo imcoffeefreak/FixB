@@ -1,0 +1,122 @@
+Table "group" {
+  "group_id" varchar(255) [pk]
+  "group_name" varchar(255)
+}
+
+Table "users" {
+  "user_id" varchar(255) [pk]
+  "group_id" varchar(255)
+  "username" varchar(255)
+  "firstname" varchar(255)
+  "lastname" varchar(255)
+  "email_address" varchar(255)
+  "mobile_number" varchar(255)
+  "bio" varchar(255)
+  "location" varchar(255)
+  "occupation" varchar(255)
+  "password" varchar(255)
+  "is_deleted" boolean
+  "deleted_at" timestamp
+  "created_at" timestamp
+  "updated_at" timestamp
+}
+
+Table "domains_or_languages" {
+  "id" varchar(255) [pk]
+  "domain_name" varchar(255)
+}
+
+Table "user_domains" {
+  "id" varchar(255) [pk]
+  "user_id" varchar(255)
+  "domain_id" varchar(255)
+}
+
+Table "bug_posts" {
+  "bug_id" varchar(255) [pk]
+  "bug_title" varchar(255)
+  "bug_description" varchar(255)
+  "bug_issuer_id" varchar(255)
+  "bug_tags" json
+  "is_pooled" boolean
+  "pooled_count" int
+  "is_solved" boolean
+  "efficient_bid" int
+  "bid_count" int
+  "bug_solver_id" varchar(255)
+  "created_at" timestamp
+  "updated_at" timestamp
+}
+
+Table "bug_screenshots" {
+  "id" varchar(255) [pk]
+  "bug_id" varchar(255)
+  "screenshot_path" varchar(255)
+}
+
+Table "bug_pool" {
+  "id" varchar(255) [pk]
+  "bug_id" varchar(255)
+  "bug_pooler_id" varchar(255)
+  "pool_title" varchar(255)
+  "pool_description" varchar(255)
+  "created_at" timestamp
+  "updated_at" timestamp
+}
+
+Table "bug_bids" {
+  "bid_id" varchar(255) [pk]
+  "bug_id" varchar(255)
+  "bidder_id" varchar(255)
+  "bid_amount" int
+  "solving_time" timestamp
+  "is_deleted" boolean
+  "created_at" timestamp
+  "updated_at" timestamp
+}
+
+Table "bug_issuer_ratings" {
+  "id" varchar(255) [pk]
+  "bug_id" varchar(255)
+  "bug_issuer_id" varchar(255)
+  "bug_issuer_rating" int
+  "bug_issuer_comment" varchar(255)
+  "created_at" timestamp
+  "updated_at" timestamp
+}
+
+Table "bug_solver_ratings" {
+  "id" varchar(255) [pk]
+  "bug_id" varchar(255)
+  "bug_solver_id" varchar(255)
+  "bug_solver_rating" int
+  "bug_solver_comment" varchar(255)
+  "created_at" timestamp
+  "updated_at" timestamp
+}
+
+Ref:"group"."group_id" < "users"."group_id"
+
+Ref:"users"."user_id" < "user_domains"."user_id"
+
+Ref:"domains_or_languages"."id" < "user_domains"."domain_id"
+
+Ref:"users"."user_id" < "bug_posts"."bug_issuer_id"
+
+Ref:"users"."user_id" < "bug_posts"."bug_solver_id"
+
+Ref:"bug_posts"."bug_id" < "bug_screenshots"."bug_id"
+
+Ref:"bug_posts"."bug_id" < "bug_pool"."bug_id"
+
+Ref:"bug_posts"."bug_id" < "bug_bids"."bug_id"
+
+Ref:"users"."user_id" < "bug_bids"."bidder_id"
+
+Ref:"bug_posts"."bug_id" < "bug_issuer_ratings"."bug_id"
+
+Ref:"users"."user_id" < "bug_issuer_ratings"."bug_issuer_id"
+
+Ref:"bug_posts"."bug_id" < "bug_solver_ratings"."bug_id"
+
+Ref:"users"."user_id" < "bug_solver_ratings"."bug_solver_id"
